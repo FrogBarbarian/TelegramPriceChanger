@@ -28,30 +28,6 @@ function sendMessage($token, $text, $chatId, $replyMarkup = '') : void
         curl_exec($ch);
 }
 
-/**
-* Задает параметры в $_POST для дальнейшего взаимодействия
-* @param новый статус бота
-* @param ID чата написавшего
-* @param текст от пользователя, если требуется
-* @return void
-*/
-function setState($state, $id, $text = '',) : void
-{
-    $_POST['state'] = $state;
-    $_POST['id'] = $id;
-    $_POST['text'] = $text;
-}
-
-/**
-* Очищает кастомные параметры $_POST
-* @return void
-*/
-function unsetState() : void
-{
-    unset($_POST['state']);
-    unset($_POST['id']);
-    unset($_POST['text']);
-}
 
 /**
 * Меняет сообщение в телеграм канале
