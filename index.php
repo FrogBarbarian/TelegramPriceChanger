@@ -3,8 +3,9 @@
 function handler ($event, $context)
 {
     require_once 'functions.php'; //Подключаем функции
+    use core\FlowControl;
    
-    $vars = require 'variables.php'; //Подключаем важные переменные
+    $vars = require 'config\variables.php'; //Подключаем важные переменные
 
     $token = $vars['token']; //Токен бота
     $channelId = $vars['channelId']; //ID телеграм канала
@@ -15,31 +16,21 @@ function handler ($event, $context)
     $text = $data['message']['text']; //Текст запроса
     $reply = ''; //Ответ пользователю
 
-    //Клавиатура при смене статуса
-    $statusKeyboard = json_encode([
-            "keyboard" => [
-                [["text" => "В продаже",],],
-                [["text" => "В резерве",],],
-                [["text" => "Продано",],]
-            ],
-            'resize_keyboard' => true,
-    ], true);
-
-    //Базовая клавиатура
-    $basicKeyboard = json_encode([
-            "keyboard" => [
-                [["text" => "Поменять статус",],],
-                [["text" => "Поменять цены",],],
-            ],
-            'resize_keyboard' => true,
-    ], true);
-
     //Проверка на валидность написавшего
     if (array_search($chatId, $curators) === false) {
         $reply = "<b>Вы не являетесь куратором бота</b>";
-        sendMessage($token, $reply, $chatId);
+        sendMessage($token, $reply, $chatId); 
         $text = 'continue';
     }
+    //Подключаем конфиг клавиатур
+    $keyboards = require 'config\keyboards.php';
+    
+    //Базовая клавиатура
+    $basicKeyboard = $keyboards['basicKeyboard'];
+    //Клавиатура при смене статуса
+    $statusKeyboard = $keyboards['statusKeyboard'];
+
+    
 
     //Место старта основного кода              
     //Проверяем установлено состояние ввода или это первичное сообщение
